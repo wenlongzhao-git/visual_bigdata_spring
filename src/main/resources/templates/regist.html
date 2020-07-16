@@ -1,0 +1,45 @@
+<head>
+    <meta charset="UTF-8" />
+    <title>用户注册</title>
+    <style type="text/css">
+        ul li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<form name="form" accept-charset="utf-8" action="/adduser" method="post">
+    <ul >
+        <li>
+            <label for="username"  class="input-tips2">用户ID：</label>
+            <div class="inputOuter2">
+                <input type="text" id="userid" name="userid" maxlength="16" />
+            </div>
+        </li>
+        <li>
+            <label for="username"  class="input-tips2">用户名：</label>
+            <div class="inputOuter2">
+                <input type="text" id="username" name="username" maxlength="16" />
+            </div>
+        </li>
+        <li>
+            <label for="password" class="input-tips2">密码：</label>
+            <div >
+                <input type="password" id="password"  name="password" maxlength="16"/>
+            </div>
+        </li>
+        <li>
+            <label for="username"  class="input-tips2">userps：</label>
+            <div class="inputOuter2">
+                <input type="text" id="userps" name="userps" maxlength="16" />
+            </div>
+        </li>
+        <li>
+            <div >
+                <input type="submit" value="注册"/>
+            </div>
+        </li>
+    </ul>
+
+</form>
+</body>

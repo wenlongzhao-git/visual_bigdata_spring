@@ -60,6 +60,12 @@
             <version>5.1.46</version>
         </dependency>
 
+        <!--数据库访问，支持JPA（Java Persistence API），包括spring-data-jpa、spring-orm、Hibernate-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
         <!-- alibaba的druid数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
