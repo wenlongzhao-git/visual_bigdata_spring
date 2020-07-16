@@ -160,10 +160,10 @@
         </dependency>
 
         <!--Springcloud-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
+        </dependency>-->
         <!--读取excel文件-->
         <dependency>
             <groupId>org.apache.poi</groupId>
