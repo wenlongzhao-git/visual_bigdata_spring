@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by huangds on 2017/10/24.
@@ -39,15 +40,23 @@ public class LoginController {
         if (verify) {
             session.setAttribute(WebSecurityConfig.SESSION_KEY, username);
             System.out.println(username);
-            return "index";
+            return "redirect:/index";
         } else {
             return "redirect:/login";
         }
     }
 
+    @GetMapping("/index")
+    public String index(){
+        return "index";
+    }
+
     @GetMapping("/logout")
     public String logout(HttpSession session){
+        System.out.println("+remoce+qian:"+session.getAttribute("username"));
         session.removeAttribute(WebSecurityConfig.SESSION_KEY);
+        System.out.println(session.getId()+"+remoce:"+session.getAttributeNames());
+        System.out.println("+remoce+hou:"+session.getAttribute("username"));
         return "redirect:/login";
     }
 
@@ -56,8 +65,8 @@ public class LoginController {
      *
      * @return
      */
-    @GetMapping("/adduser")
-    public String regist(String userid,String username,String password,String userps,HttpSession session){
+    @PostMapping("/adduser")
+    public String adduser(String userid,String username,String password,String userps,HttpSession session){
         User user = new User();
         user.setUserid(userid);
         user.setUsername(username);
@@ -65,8 +74,19 @@ public class LoginController {
         user.setUserps(userps);
 
         loginService.save(user);
-        System.out.println("********");
-        return "/login";
+        return "redirect:/login";
+    }
+
+    @GetMapping("/regist")
+    public String regist(){
+        return "regist";
+    }
+
+    @ResponseBody
+    @GetMapping("/findAll")
+    public List<User> findAll(){
+        List<User> userList = loginService.userListAll();
+        return userList;
     }
 
 }

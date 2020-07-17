@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by huangds on 2017/10/28.
  */
 @Entity
-@Table(name="tb_user_management")
+@Table(name="tb_admin_role_info")
 public class User {
 
     @Id

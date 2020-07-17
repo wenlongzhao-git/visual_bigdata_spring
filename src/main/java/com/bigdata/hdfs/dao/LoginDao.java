@@ -16,4 +16,6 @@ public interface LoginDao extends CrudRepository<User, Long> {
   public User save(User user);
 
   public List<User> findByUsername(String name);
+
+  public List<User> findAll();
 }

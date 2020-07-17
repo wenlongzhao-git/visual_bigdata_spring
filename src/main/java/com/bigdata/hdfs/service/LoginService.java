@@ -17,6 +17,11 @@ public class LoginService {
     @Autowired
     private LoginDao loginDao;
 
+    public List<User> userListAll(){
+        List<User> userList = loginDao.findAll();
+        return userList;
+    }
+
     public boolean verifyLogin(User user){
         List<User> userList = loginDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         return userList.size()>0;
@@ -24,10 +29,12 @@ public class LoginService {
 
     @Transactional
     public void save(User user){
-        if(user != null && loginDao.findByUsername(user.getUsername()).size() > 0) {
+        List<User> userList = loginDao.findByUsername(user.getUsername());
+        if(user != null && userList.isEmpty() && userList.size() == 0) {
             loginDao.save(user);
         }else {
             // TODO
+            System.out.println("添加失败：");
         }
     }
 
