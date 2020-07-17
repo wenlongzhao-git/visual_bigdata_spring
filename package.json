@@ -1,0 +1,20 @@
+{
+  "name": "visual_bigdata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wenlongzhao-git/visual_bigdata.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wenlongzhao-git/visual_bigdata/issues"
+  },
+  "homepage": "https://github.com/wenlongzhao-git/visual_bigdata#readme"
+}
