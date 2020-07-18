@@ -22,7 +22,6 @@
             axios
                 .get('http://localhost:8085/findAll')
                 .then(response => (this.info = response))
-                .then(response => (this.data().info = response))
         .catch(function (error) { // 请求失败处理
                 console.log(error);
             });
