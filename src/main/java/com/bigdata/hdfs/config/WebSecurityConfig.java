@@ -28,7 +28,8 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter{
         return new SecurityInterceptor();
     }
 
-    public void  addInterceptors(InterceptorRegistry registry){
+    @Override
+    public void  addInterceptors( InterceptorRegistry registry){
         InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
 
         addInterceptor.excludePathPatterns("/error");
