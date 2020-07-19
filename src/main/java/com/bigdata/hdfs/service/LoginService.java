@@ -1,7 +1,7 @@
 package com.bigdata.hdfs.service;
 
 import com.bigdata.hdfs.dao.LoginDao;
-import com.bigdata.hdfs.bean.User;
+import com.bigdata.hdfs.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +28,15 @@ public class LoginService {
     }
 
     @Transactional
-    public void save(User user){
+    public Boolean save(User user){
         List<User> userList = loginDao.findByUsername(user.getUsername());
         if(user != null && userList.isEmpty() && userList.size() == 0) {
             loginDao.save(user);
+            return true;
         }else {
             // TODO
             System.out.println("添加失败：");
+            return false;
         }
     }
 

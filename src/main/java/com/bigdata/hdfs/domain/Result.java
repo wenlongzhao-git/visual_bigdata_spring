@@ -1,4 +1,6 @@
-package com.bigdata.hdfs.bean;
+package com.bigdata.hdfs.domain;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * 向前端返回信息封装
@@ -14,6 +16,9 @@ public class Result<T> {
      * 数据是否正常请求
      */
     private boolean success;
+
+
+    private HttpSession session;
 
     /**
      * 具体返回的数据
@@ -42,5 +47,13 @@ public class Result<T> {
 
     public void setDetail(T detail) {
         this.detail = detail;
+    }
+
+    public HttpSession getSession() {
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
     }
 }

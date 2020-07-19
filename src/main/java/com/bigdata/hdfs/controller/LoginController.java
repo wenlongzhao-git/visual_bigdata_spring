@@ -1,15 +1,21 @@
 package com.bigdata.hdfs.controller;
 
 import com.bigdata.hdfs.config.WebSecurityConfig;
-import com.bigdata.hdfs.bean.User;
+import com.bigdata.hdfs.domain.Result;
+import com.bigdata.hdfs.domain.User;
 import com.bigdata.hdfs.service.LoginService;
+import com.bigdata.hdfs.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by huangds on 2017/10/24.
@@ -21,8 +27,13 @@ public class LoginController {
     private LoginService loginService;
 
     @GetMapping("/")
-    public String index(@SessionAttribute(WebSecurityConfig.SESSION_KEY)String account, Model model){
+    public String index(Model model){
 
+        return "index";
+    }
+
+    @GetMapping("/index")
+    public String index(){
         return "index";
     }
 
@@ -31,33 +42,51 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/errors")
+    @ResponseBody
+    public Map<String, String> errors(){
+        Map<String,String> map = new HashMap<>();
+        map.put("islogin","false");
+        return map;
+    }
+
     @PostMapping("/loginVerify")
-    public String loginVerify(String username,String password,HttpSession session){
+    @ResponseBody
+    public Map<String, String> loginVerify(String username, String password, HttpServletRequest request, HttpServletResponse response,
+                                           @CookieValue(value = "token", required = false) String token){
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         boolean verify = loginService.verifyLogin(user);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("username",user.getUsername());
+
         if (verify) {
-            session.setAttribute(WebSecurityConfig.SESSION_KEY, username);
-            System.out.println(username);
-            return "redirect:/index";
+            if (token == null || CookieUtils.TOKENX != CookieUtils.getCookie(request,"token")) {
+                System.out.println("登陆成功，并添加新token");
+                CookieUtils.writeCookie(response, "token", CookieUtils.TOKENX);
+            } else {
+                //TODO 后期token值做随机值入库后，这里要先进行库里面的token查询，并重置到期时间
+            }
+            CookieUtils.writeCookie(response, "code", CookieUtils.SUCCESS);
+            CookieUtils.writeCookie(response, "username", username);
+            map.put("islogin","true");
         } else {
-            return "redirect:/login";
+            map.put("islogin","false");
         }
+        return map;
     }
 
-    @GetMapping("/index")
-    public String index(){
-        return "index";
-    }
+    @PostMapping("/logout")
+    @ResponseBody
+    public Map<String, String> logout(HttpServletRequest request, HttpServletResponse response){
+        CookieUtils.writeCookie(response, "token", null,0);
+        CookieUtils.writeCookie(response, "username", null,0);
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session){
-        System.out.println("+remoce+qian:"+session.getAttribute("username"));
-        session.removeAttribute(WebSecurityConfig.SESSION_KEY);
-        System.out.println(session.getId()+"+remoce:"+session.getAttributeNames());
-        System.out.println("+remoce+hou:"+session.getAttribute("username"));
-        return "redirect:/login";
+        Map<String,String> map = new HashMap<>();
+        map.put("islogin","false");
+        return map;
     }
 
     /**
@@ -66,15 +95,26 @@ public class LoginController {
      * @return
      */
     @PostMapping("/adduser")
-    public String adduser(String userid,String username,String password,String userps,HttpSession session){
+    @ResponseBody
+    public Map<String, String> adduser(String username,String password,HttpSession session){
         User user = new User();
-        user.setUserid(userid);
+        user.setUserid(username);
         user.setUsername(username);
         user.setPassword(password);
-        user.setUserps(userps);
+        user.setUserps("普通");
 
-        loginService.save(user);
-        return "redirect:/login";
+        Boolean isAdd = loginService.save(user);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("username",user.getUsername());
+
+        if (isAdd) {
+            map.put("isadd","true");
+            return map;
+        } else {
+            map.put("isadd","false");
+            return map;
+        }
     }
 
     @GetMapping("/regist")

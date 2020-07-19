@@ -1,5 +1,6 @@
 package com.bigdata.hdfs.aop;
 
+import com.bigdata.hdfs.utils.CookieUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -57,6 +58,7 @@ public class LogAspect {
         logger.info("IP : " + request.getRemoteAddr());
         logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+        logger.info("IN Cookies : " + CookieUtils.showCookie(request));
         //获取所有参数
         Enumeration<String> enu = request.getParameterNames();
         while (enu.hasMoreElements()) {
@@ -74,6 +76,7 @@ public class LogAspect {
     public void logAfterReturning(Object object) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        logger.info("OUT Cookies : " + CookieUtils.showCookie(request));
         logger.info(request.getRequestURL().toString() + "   接口用时：" + (System.currentTimeMillis() - startTime.get()) + "ms");
         logger.info("LogAspect logAfterReturning end------------------------------------------------");
     }

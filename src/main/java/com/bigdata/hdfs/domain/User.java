@@ -1,4 +1,4 @@
-package com.bigdata.hdfs.bean;
+package com.bigdata.hdfs.domain;
 
 import javax.persistence.*;
 

@@ -1,8 +1,8 @@
 package com.bigdata.hdfs.service;
 
 
-import com.bigdata.hdfs.bean.Result;
-import com.bigdata.hdfs.bean.User;
+import com.bigdata.hdfs.domain.Result;
+import com.bigdata.hdfs.domain.User;
 import com.bigdata.hdfs.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

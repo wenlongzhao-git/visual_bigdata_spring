@@ -1,7 +1,7 @@
 package com.bigdata.hdfs.mapper;
 
 
-import com.bigdata.hdfs.bean.User;
+import com.bigdata.hdfs.domain.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

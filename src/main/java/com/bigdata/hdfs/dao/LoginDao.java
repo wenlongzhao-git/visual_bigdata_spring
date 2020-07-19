@@ -1,6 +1,6 @@
 package com.bigdata.hdfs.dao;
 
-import com.bigdata.hdfs.bean.User;
+import com.bigdata.hdfs.domain.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
