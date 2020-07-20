@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by huangds on 2017/10/24.
+ * 用户管理类
  */
 @Controller
-public class LoginController {
+public class UserMangerController {
 
     @Autowired
     private LoginService loginService;
@@ -64,8 +64,8 @@ public class LoginController {
 
         if (verify) {
             if (token == null || CookieUtils.TOKENX != CookieUtils.getCookie(request,"token")) {
-                System.out.println("登陆成功，并添加新token");
                 CookieUtils.writeCookie(response, "token", CookieUtils.TOKENX);
+                System.out.println("登陆成功，并添加新token, token = " + CookieUtils.TOKENX);
             } else {
                 //TODO 后期token值做随机值入库后，这里要先进行库里面的token查询，并重置到期时间
             }
@@ -78,9 +78,15 @@ public class LoginController {
         return map;
     }
 
+
+    /**
+     * 登出实现，进行token及username的过期
+     * @param response
+     * @return
+     */
     @PostMapping("/logout")
     @ResponseBody
-    public Map<String, String> logout(HttpServletRequest request, HttpServletResponse response){
+    public Map<String, String> logout(HttpServletResponse response){
         CookieUtils.writeCookie(response, "token", null,0);
         CookieUtils.writeCookie(response, "username", null,0);
 
@@ -90,13 +96,38 @@ public class LoginController {
     }
 
     /**
-     * 注册
-     *
+     * 验证一个用户是否存在
+     * @param username
+     * @return
+     */
+    @PostMapping("/verifyExist")
+    @ResponseBody
+    public Map<String, String> verifyExist(String username){
+        User user = new User();
+        user.setUsername(username);
+
+        Boolean isExist = loginService.isExist(user);
+
+        Map<String,String> map = new HashMap<>();
+
+        if (isExist) {
+            map.put("isexist","true");
+            return map;
+        } else {
+            map.put("isexist","false");
+            return map;
+        }
+    }
+
+    /**
+     * 注册-新增一个用户信息
+     * @param username
+     * @param password
      * @return
      */
     @PostMapping("/adduser")
     @ResponseBody
-    public Map<String, String> adduser(String username,String password,HttpSession session){
+    public Map<String, String> adduser(String username,String password){
         User user = new User();
         user.setUserid(username);
         user.setUsername(username);
@@ -115,11 +146,6 @@ public class LoginController {
             map.put("isadd","false");
             return map;
         }
-    }
-
-    @GetMapping("/regist")
-    public String regist(){
-        return "regist";
     }
 
     @ResponseBody

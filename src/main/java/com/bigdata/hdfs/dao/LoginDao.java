@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by huangds on 2017/10/28.
+ * 用户Dao类
  */
 @Repository
 public interface LoginDao extends CrudRepository<User, Long> {

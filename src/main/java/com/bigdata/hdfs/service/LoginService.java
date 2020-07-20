@@ -27,10 +27,18 @@ public class LoginService {
         return userList.size()>0;
     }
 
-    @Transactional
-    public Boolean save(User user){
+    public boolean isExist(User user){
         List<User> userList = loginDao.findByUsername(user.getUsername());
         if(user != null && userList.isEmpty() && userList.size() == 0) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public Boolean save(User user){
+        if(isExist(user)) {
             loginDao.save(user);
             return true;
         }else {

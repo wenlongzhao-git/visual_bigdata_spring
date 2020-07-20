@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Cookie Utils 类
+ * 进行Cookie 的获取、新增、重置操作
+ */
 public class CookieUtils {
 
     // TODO 后期做成动态获取，存储到数据库中，每次验证时到数据库中取并验证内容和时间
@@ -65,6 +69,14 @@ public class CookieUtils {
     }
 
 
+    /**
+     * 设置Cookie的某个key的过期时间
+     * 可以重置也可以设置为已过期即Cookie清除
+     * @param response
+     * @param cookieName
+     * @param value
+     * @param time
+     */
     public static void writeCookie(HttpServletResponse response, String cookieName, String value,int time) {
         Cookie cookie = new Cookie(cookieName, value);
         cookie.setPath("/");
