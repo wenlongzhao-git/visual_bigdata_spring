@@ -1,31 +1,56 @@
 package com.bigdata.hdfs.domain;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 /**
- * Created by huangds on 2017/10/28.
+ * @author zwl
  */
-@Entity
-@Table(name="tb_admin_role_info")
 public class User {
 
-    @Id
-    @Column(name = "id")
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "userid")
-    private String userid;
-
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "userps")
+    private String email;
+
+    private int age;
+
+    private int sex;
+
+    private Date createtime;
+
+    private Date endtime;
+
     private String userps;
+
+    private int isdel;
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    public int getIsdel() {
+        return isdel;
+    }
+
+    public void setIsdel(int isdel) {
+        this.isdel = isdel;
+    }
 
     public long getId() {
         return id;
@@ -33,22 +58,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getUserps() {
-        return userps;
-    }
-
-    public void setUserps(String userps) {
-        this.userps = userps;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
     }
 
     public String getUsername() {
@@ -65,5 +74,53 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getUserps() {
+        return userps;
+    }
+
+    public void setUserps(String userps) {
+        this.userps = userps;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", sex=" + sex +
+                ", createtime=" + createtime +
+                ", endtime=" + endtime +
+                ", userps='" + userps + '\'' +
+                ", isdel=" + isdel +
+                '}';
     }
 }

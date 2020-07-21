@@ -11,11 +11,11 @@ import java.util.List;
 @Repository
 public interface LoginDao extends CrudRepository<User, Long> {
 
-  public List<User> findByUsernameAndPassword(String name, String password);
-
   public User save(User user);
+
+  public List<User> findAll();
 
   public List<User> findByUsername(String name);
 
-  public List<User> findAll();
+  public List<User> findByUsernameAndPassword(String name, String password);
 }
