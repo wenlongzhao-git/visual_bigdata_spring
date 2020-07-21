@@ -4,6 +4,7 @@ import com.bigdata.hdfs.config.WebSecurityConfig;
 import com.bigdata.hdfs.domain.Result;
 import com.bigdata.hdfs.domain.User;
 import com.bigdata.hdfs.service.LoginService;
+import com.bigdata.hdfs.service.UserService;
 import com.bigdata.hdfs.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -155,4 +156,13 @@ public class UserMangerController {
         return userList;
     }
 
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/myBatis")
+    @ResponseBody
+    public User getUserInfo(int id){
+        return userService.selectUser(id);
+    }
 }

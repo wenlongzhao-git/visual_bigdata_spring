@@ -42,4 +42,12 @@ public interface UserMapper {
      */
     @Select("select u.id from user u where u.username = #{username} and password = #{password}")
     Long login(User user);
+
+
+    /**
+     * 测试MyBatis
+     * @param id
+     * @return
+     */
+    User selectUser(int id);
 }
