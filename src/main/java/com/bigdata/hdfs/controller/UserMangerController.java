@@ -27,6 +27,10 @@ public class UserMangerController {
     @Autowired
     private LoginService loginService;
 
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/")
     public String index(Model model){
 
@@ -96,29 +100,25 @@ public class UserMangerController {
         return map;
     }
 
+    /*@ResponseBody
+    @GetMapping("/findAll")
+    public List<User> findAll(){
+        List<User> userList = loginService.userListAll();
+        return userList;
+    }*/
+
     /**
      * 验证一个用户是否存在
      * @param username
      * @return
      */
-    /*@PostMapping("/verifyExist")
+    @PostMapping("/verifyExist")
     @ResponseBody
-    public Map<String, String> verifyExist(String username){
-        User user = new User();
-        user.setUsername(username);
+    public Result verifyExist(String username){
 
-        Boolean isExist = loginService.isExist(user);
-
-        Map<String,String> map = new HashMap<>();
-
-        if (isExist) {
-            map.put("isexist","true");
-            return map;
-        } else {
-            map.put("isexist","false");
-            return map;
-        }
-    }*/
+        Result result = userService.findByUsername(username);
+        return result;
+    }
 
     /**
      * 注册-新增一个用户信息
@@ -126,38 +126,19 @@ public class UserMangerController {
      * @param password
      * @return
      */
-    /*@PostMapping("/adduser")
+    @PostMapping("/adduser")
     @ResponseBody
-    public Map<String, String> adduser(String username,String password){
+    public Result adduser(String username,String password){
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setUserps("普通");
+//        user.setCreatetime(System.tim);
 
-        Boolean isAdd = loginService.save(user);
+        Result result = userService.save(user);
 
-        Map<String,String> map = new HashMap<>();
-        map.put("username",user.getUsername());
-
-        if (isAdd) {
-            map.put("isadd","true");
-            return map;
-        } else {
-            map.put("isadd","false");
-            return map;
-        }
+        return result;
     }
-
-    @ResponseBody
-    @GetMapping("/findAll")
-    public List<User> findAll(){
-        List<User> userList = loginService.userListAll();
-        return userList;
-    }*/
-
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping("/myBatis")
     @ResponseBody
