@@ -17,9 +17,6 @@ public class Result<T> {
      */
     private boolean success;
 
-
-    private HttpSession session;
-
     /**
      * 具体返回的数据
      */
@@ -47,13 +44,5 @@ public class Result<T> {
 
     public void setDetail(T detail) {
         this.detail = detail;
-    }
-
-    public HttpSession getSession() {
-        return session;
-    }
-
-    public void setSession(HttpSession session) {
-        this.session = session;
     }
 }

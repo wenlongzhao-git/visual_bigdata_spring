@@ -1,6 +1,6 @@
 package com.bigdata.hdfs.dao;
 
-import com.bigdata.hdfs.domain.User;
+import com.bigdata.hdfs.domain.LoginUser;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.List;
  * 用户Dao类
  */
 @Repository
-public interface LoginDao extends CrudRepository<User, Long> {
+public interface LoginDao extends CrudRepository<LoginUser, Long> {
 
-  public User save(User user);
+  public LoginUser save(LoginUser user);
 
-  public List<User> findAll();
+  public List<LoginUser> findAll();
 
-  public List<User> findByUsername(String name);
+  public List<LoginUser> findByUsername(String name);
 
-  public List<User> findByUsernameAndPassword(String name, String password);
+  public List<LoginUser> findByUsernameAndPassword(String name, String password);
 }

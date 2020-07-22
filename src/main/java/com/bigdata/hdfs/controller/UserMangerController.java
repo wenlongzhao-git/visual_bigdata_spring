@@ -51,7 +51,7 @@ public class UserMangerController {
         return map;
     }
 
-    @PostMapping("/loginVerify")
+    /*@PostMapping("/loginVerify")
     @ResponseBody
     public Map<String, String> loginVerify(String username, String password, HttpServletRequest request, HttpServletResponse response,
                                            @CookieValue(value = "token", required = false) String token){
@@ -77,7 +77,7 @@ public class UserMangerController {
             map.put("islogin","false");
         }
         return map;
-    }
+    }*/
 
 
     /**
@@ -101,7 +101,7 @@ public class UserMangerController {
      * @param username
      * @return
      */
-    @PostMapping("/verifyExist")
+    /*@PostMapping("/verifyExist")
     @ResponseBody
     public Map<String, String> verifyExist(String username){
         User user = new User();
@@ -118,7 +118,7 @@ public class UserMangerController {
             map.put("isexist","false");
             return map;
         }
-    }
+    }*/
 
     /**
      * 注册-新增一个用户信息
@@ -126,11 +126,10 @@ public class UserMangerController {
      * @param password
      * @return
      */
-    @PostMapping("/adduser")
+    /*@PostMapping("/adduser")
     @ResponseBody
     public Map<String, String> adduser(String username,String password){
         User user = new User();
-        user.setUserid(username);
         user.setUsername(username);
         user.setPassword(password);
         user.setUserps("普通");
@@ -154,7 +153,7 @@ public class UserMangerController {
     public List<User> findAll(){
         List<User> userList = loginService.userListAll();
         return userList;
-    }
+    }*/
 
 
     @Autowired

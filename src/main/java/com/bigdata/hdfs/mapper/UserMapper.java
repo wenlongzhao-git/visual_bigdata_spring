@@ -10,18 +10,21 @@ import java.util.List;
 /**
  * mapper的具体表达式
  */
-@Mapper //标记mapper文件位置，否则在Application.class启动类上配置mapper包扫描
+//@Mapper //标记mapper文件位置，否则在Application.class启动类上配置mapper包扫描
+@Repository
 public interface UserMapper {
 
-    User save(User user);
+    int save(User user);
 
     List<User> findAll();
 
-    List<User> findByUsername(String name);
+    User findByUsername(String name);
 
-    List<User> findByUsernameAndPassword(String name, String password);
+    User findByUsernameAndPassword(String name, String password);
 
-    User update(User user);
+    int update(User user);
+
+    int delete(User user);
 
     /**
      * 测试MyBatis
