@@ -79,6 +79,8 @@ public class LogAspect {
         logger.info("OUT Cookies : " + CookieUtils.showCookie(request));
         logger.info(request.getRequestURL().toString() + "   接口用时：" + (System.currentTimeMillis() - startTime.get()) + "ms");
         logger.info("LogAspect logAfterReturning end------------------------------------------------");
+
+        startTime.remove();
     }
 
 

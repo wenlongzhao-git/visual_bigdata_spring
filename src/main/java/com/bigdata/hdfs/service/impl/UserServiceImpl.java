@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
@@ -17,63 +18,13 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserMapper userMapper;
-    /**
-     * 注册
-     * @param user 参数封装
-     * @return Result
-     */
-    /*public Result regist(User user) {
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setDetail(null);
-        try {
-            User existUser = userMapper.findUserByName(user.getUsername());
-            if(existUser != null){
-                //如果用户名已存在
-                result.setMsg("用户名已存在");
-
-            }else{
-                userMapper.regist(user);
-                //System.out.println(user.getId());
-                result.setMsg("注册成功");
-                result.setSuccess(true);
-                result.setDetail(user);
-            }
-        } catch (Exception e) {
-            result.setMsg(e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-    *//**
-     * 登录
-     * @param user 用户名和密码
-     * @return Result
-     *//*
-    public Result login(User user) {
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setDetail(null);
-        try {
-            Long userId= userMapper.login(user);
-            if(userId == null){
-                result.setMsg("用户名或密码错误");
-            }else{
-                result.setMsg("登录成功");
-                result.setSuccess(true);
-                user.setId(userId);
-                result.setDetail(user);
-            }
-        } catch (Exception e) {
-            result.setMsg(e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }*/
-
 
     @Override
     public Result save(User user) {
+
+        user.setUserps("普通");
+        user.setIsdel(0);
+
         Result result = new Result();
         result.setSuccess(false);
         result.setDetail(null);
@@ -83,7 +34,7 @@ public class UserServiceImpl implements UserService{
             if(res > 0){
                 result.setMsg("创建成功！");
                 result.setSuccess(true);
-                user = (User) findByUsername(user.getUsername()).getDetail();
+//                user = (User) findByUsername(user.getUsername()).getDetail();
                 result.setDetail(user);
             }else {
                 result.setMsg("创建失败！");
@@ -91,24 +42,41 @@ public class UserServiceImpl implements UserService{
         }catch (Exception e){
             result.setMsg(e.getMessage());
             e.printStackTrace();
-        }finally {
-            return result;
         }
+        return result;
+
     }
 
     @Override
-    public List<User> findAll() {
-        return userMapper.findAll();
-    }
-
-    @Override
-    public Result findByUsername(String name) {
+    public Result findAll() {
         Result result = new Result();
         result.setSuccess(false);
         result.setDetail(null);
 
         try {
-            User user = userMapper.findByUsername(name);
+            List<User> user = userMapper.findAll();
+            if(user != null && user.size() > 0){
+                result.setMsg("用户存在！");
+                result.setSuccess(true);
+                result.setDetail(user);
+            }else {
+                result.setMsg("用户不存在！");
+            }
+        }catch (Exception e){
+            result.setMsg(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public Result findByUsername(Map map) {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setDetail(null);
+
+        try {
+            User user = userMapper.findByUsername(map);
             if(user != null && user.getId() > 0){
                 result.setMsg("用户存在！");
                 result.setSuccess(true);
@@ -119,14 +87,33 @@ public class UserServiceImpl implements UserService{
         }catch (Exception e){
             result.setMsg(e.getMessage());
             e.printStackTrace();
-        }finally {
-            return result;
         }
+        return result;
+
     }
 
     @Override
-    public User findByUsernameAndPassword(String name, String password) {
-        return userMapper.findByUsernameAndPassword(name,password);
+    public Result findByUsernameAndPassword(Map map) {
+        Result result = new Result();
+        result.setSuccess(false);
+        result.setDetail(null);
+
+        try {
+            User user = userMapper.findByUsernameAndPassword(map);
+            if(user != null && user.getId() > 0){
+                result.setMsg("用户存在！");
+                result.setSuccess(true);
+                result.setDetail(user);
+                User detail = (User) result.getDetail();
+            }else {
+                result.setMsg("用户不存在！");
+            }
+        }catch (Exception e){
+            result.setMsg(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+
     }
 
     @Override
@@ -147,15 +134,5 @@ public class UserServiceImpl implements UserService{
         }else {
             return false;
         }
-    }
-
-    /**
-     * 测试MyBatis
-     * @param id
-     * @return
-     */
-    @Override
-    public User selectUser(int id) {
-        return userMapper.selectUser(id);
     }
 }

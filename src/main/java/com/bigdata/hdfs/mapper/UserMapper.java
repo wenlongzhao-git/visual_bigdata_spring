@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * mapper的具体表达式
@@ -18,9 +19,9 @@ public interface UserMapper {
 
     List<User> findAll();
 
-    User findByUsername(String name);
+    User findByUsername(Map map);
 
-    User findByUsernameAndPassword(String name, String password);
+    User findByUsernameAndPassword(Map map);
 
     int update(User user);
 

@@ -4,25 +4,19 @@ import com.bigdata.hdfs.domain.Result;
 import com.bigdata.hdfs.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
     Result save(User user);
 
-    List<User> findAll();
+    Result findAll();
 
-    Result findByUsername(String name);
+    Result findByUsername(Map map);
 
-    User findByUsernameAndPassword(String name, String password);
+    Result findByUsernameAndPassword(Map map);
 
     boolean update(User user);
 
     boolean delete(User user);
-
-    /**
-     * 测试MyBatis
-     * @param id
-     * @return
-     */
-    User selectUser(int id);
 }

@@ -13,22 +13,49 @@
         <result column="endtime" property="endtime" jdbcType="TIME" />
         <result column="userps" property="userps" jdbcType="VARCHAR" />
         <result column="isdel" property="isdel" jdbcType="INTEGER" />
-
     </resultMap>
-
-    <select id="selectUser" parameterType="INTEGER" resultMap="UserMap">
-        select *
-        from tb_admin_role_info
-        where 1=1
-        and id = #{id,jdbcType=INTEGER}
-
-
-    </select>
 
     <insert id="save" parameterType="User" >
         insert into tb_admin_role_info(username,password,email,age,sex,createtime,endtime,userps,isdel)
-        values (#{username},#{password},#{email},#{age},#{sex},#{createtime},#{endtime},#{userps},#{isdel,jdbcType=INTEGER})
+        values (#{username},#{password},#{email},#{age},#{sex},#{createtime},#{endtime},#{userps},#{isdel})
     </insert>
+
+    <select id="findAll" resultMap="UserMap">
+        select *
+        from tb_admin_role_info
+        where 1=1
+    </select>
+
+    <select id="findByUsername" parameterType="Map" resultMap="UserMap">
+        select *
+        from tb_admin_role_info
+        where 1=1
+        and username = #{username,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByUsernameAndPassword" parameterType="Map" resultMap="UserMap">
+        select *
+        from tb_admin_role_info
+        where 1=1
+        and username = #{username,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="update" parameterType="User" >
+        update tb_admin_role_info
+        set
+          password = #{password,jdbcType=VARCHAR},
+          email = #{password,jdbcType=VARCHAR},
+          age = #{password,jdbcType=VARCHAR},
+          sex = #{password,jdbcType=VARCHAR},
+          endtime = #{password,jdbcType=VARCHAR},
+          userps = #{password,jdbcType=VARCHAR},
+          isdel = #{password,jdbcType=VARCHAR}
+        where 1=1
+        and username = #{username,jdbcType=VARCHAR}
+    </insert>
+
+
 
 
 </mapper>

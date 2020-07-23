@@ -20,12 +20,10 @@ import java.util.Map;
 
 /**
  * 用户管理类
+ * @author zwl
  */
 @Controller
 public class UserMangerController {
-
-    @Autowired
-    private LoginService loginService;
 
 
     @Autowired
@@ -55,19 +53,14 @@ public class UserMangerController {
         return map;
     }
 
-    /*@PostMapping("/loginVerify")
+    @PostMapping("/loginVerify")
     @ResponseBody
-    public Map<String, String> loginVerify(String username, String password, HttpServletRequest request, HttpServletResponse response,
+    public Result loginVerify(@RequestParam Map<String,Object> map, HttpServletRequest request, HttpServletResponse response,
                                            @CookieValue(value = "token", required = false) String token){
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        boolean verify = loginService.verifyLogin(user);
 
-        Map<String,String> map = new HashMap<>();
-        map.put("username",user.getUsername());
+        Result result = userService.findByUsernameAndPassword(map);
 
-        if (verify) {
+        if (result.isSuccess()) {
             if (token == null || CookieUtils.TOKENX != CookieUtils.getCookie(request,"token")) {
                 CookieUtils.writeCookie(response, "token", CookieUtils.TOKENX);
                 System.out.println("登陆成功，并添加新token, token = " + CookieUtils.TOKENX);
@@ -75,13 +68,40 @@ public class UserMangerController {
                 //TODO 后期token值做随机值入库后，这里要先进行库里面的token查询，并重置到期时间
             }
             CookieUtils.writeCookie(response, "code", CookieUtils.SUCCESS);
-            CookieUtils.writeCookie(response, "username", username);
-            map.put("islogin","true");
+            CookieUtils.writeCookie(response, "username", ((User)result.getDetail()).getUsername());
         } else {
-            map.put("islogin","false");
         }
-        return map;
-    }*/
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping("/findAll")
+    public Result findAll(){
+        return userService.findAll();
+    }
+
+    /**
+     * 验证一个用户是否存在
+     * @param map
+     * @return
+     */
+    @PostMapping("/verifyExist")
+    @ResponseBody
+    public Result verifyExist(@RequestParam Map<String,Object> map){
+        return userService.findByUsername(map);
+    }
+
+    /**
+     * 注册-新增一个用户信息
+     * @param user
+     * @return
+     */
+    @PostMapping("/adduser")
+    @ResponseBody
+    public Result adduser(@RequestBody User user){
+        System.out.println(user);
+        return userService.save(user);
+    }
 
 
     /**
@@ -91,58 +111,15 @@ public class UserMangerController {
      */
     @PostMapping("/logout")
     @ResponseBody
-    public Map<String, String> logout(HttpServletResponse response){
+    public Result logout(HttpServletResponse response){
         CookieUtils.writeCookie(response, "token", null,0);
         CookieUtils.writeCookie(response, "username", null,0);
 
-        Map<String,String> map = new HashMap<>();
-        map.put("islogin","false");
-        return map;
-    }
-
-    /*@ResponseBody
-    @GetMapping("/findAll")
-    public List<User> findAll(){
-        List<User> userList = loginService.userListAll();
-        return userList;
-    }*/
-
-    /**
-     * 验证一个用户是否存在
-     * @param username
-     * @return
-     */
-    @PostMapping("/verifyExist")
-    @ResponseBody
-    public Result verifyExist(String username){
-
-        Result result = userService.findByUsername(username);
-        return result;
-    }
-
-    /**
-     * 注册-新增一个用户信息
-     * @param username
-     * @param password
-     * @return
-     */
-    @PostMapping("/adduser")
-    @ResponseBody
-    public Result adduser(String username,String password){
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setUserps("普通");
-//        user.setCreatetime(System.tim);
-
-        Result result = userService.save(user);
+        Result result = new Result();
+        result.setSuccess(true);
+        result.setMsg("退出成功！");
+        result.setDetail(null);
 
         return result;
-    }
-
-    @GetMapping("/myBatis")
-    @ResponseBody
-    public User getUserInfo(int id){
-        return userService.selectUser(id);
     }
 }
