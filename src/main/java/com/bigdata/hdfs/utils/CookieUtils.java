@@ -13,9 +13,10 @@ import java.util.Map;
 public class CookieUtils {
 
     // TODO 后期做成动态获取，存储到数据库中，每次验证时到数据库中取并验证内容和时间
-    public static final String TOKENX = "1234";
+    public static final String TOKEN_VALUE = "1234";
     public static final String ERROR_NOTLOGIN = "603";
     public static final String SUCCESS = "200";
+    public static final String TOKEN = "token";
 
 
     /**

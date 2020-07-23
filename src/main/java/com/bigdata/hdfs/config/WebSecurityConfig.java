@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter{
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws IOException {
             HttpSession session = request.getSession();
 
-            if(CookieUtils.getCookie(request,"token") != null && CookieUtils.getCookie(request,"token").equals(CookieUtils.TOKENX)){
+            if(CookieUtils.getCookie(request,CookieUtils.TOKEN) != null && CookieUtils.getCookie(request,CookieUtils.TOKEN).equals(CookieUtils.TOKEN_VALUE)){
                 CookieUtils.writeCookie(response, "code", CookieUtils.SUCCESS);
                 return true;
             }

@@ -22,6 +22,8 @@ public class User {
 
     private Date createtime;
 
+    private Date updatetime;
+
     private Date endtime;
 
     private String userps;
@@ -108,6 +110,14 @@ public class User {
         this.userps = userps;
     }
 
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -118,6 +128,7 @@ public class User {
                 ", age=" + age +
                 ", sex=" + sex +
                 ", createtime=" + createtime +
+                ", updatetime=" + updatetime +
                 ", endtime=" + endtime +
                 ", userps='" + userps + '\'' +
                 ", isdel=" + isdel +

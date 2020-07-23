@@ -30,7 +30,6 @@ public class ConfigController {
     @Autowired
     ConfigBean configBean;
 
-//    @RequestMapping("/hexo")
     @RequestMapping(value = "/hexo",method = RequestMethod.POST)
     @ApiOperation("hexo接口")
     public String hexo2(){

@@ -1,9 +1,7 @@
 package com.bigdata.hdfs.controller;
 
-import com.bigdata.hdfs.config.WebSecurityConfig;
 import com.bigdata.hdfs.domain.Result;
 import com.bigdata.hdfs.domain.User;
-import com.bigdata.hdfs.service.LoginService;
 import com.bigdata.hdfs.service.UserService;
 import com.bigdata.hdfs.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,9 +57,9 @@ public class UserMangerController {
         Result result = userService.findByUsernameAndPassword(map);
 
         if (result.isSuccess()) {
-            if (token == null || CookieUtils.TOKENX != CookieUtils.getCookie(request,"token")) {
-                CookieUtils.writeCookie(response, "token", CookieUtils.TOKENX);
-                System.out.println("登陆成功，并添加新token, token = " + CookieUtils.TOKENX);
+            if (token == null || CookieUtils.TOKEN_VALUE != CookieUtils.getCookie(request,CookieUtils.TOKEN)) {
+                CookieUtils.writeCookie(response, CookieUtils.TOKEN, CookieUtils.TOKEN_VALUE);
+                System.out.println("登陆成功，并添加新token, token = " + CookieUtils.TOKEN_VALUE);
             } else {
                 //TODO 后期token值做随机值入库后，这里要先进行库里面的token查询，并重置到期时间
             }
@@ -99,10 +95,19 @@ public class UserMangerController {
     @PostMapping("/adduser")
     @ResponseBody
     public Result adduser(@RequestBody User user){
-        System.out.println(user);
         return userService.save(user);
     }
 
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    @PostMapping("/update")
+    @ResponseBody
+    public Result update(@RequestBody User user){
+        return userService.update(user);
+    }
 
     /**
      * 登出实现，进行token及username的过期
@@ -121,5 +126,16 @@ public class UserMangerController {
         result.setDetail(null);
 
         return result;
+    }
+
+    /**
+     * 删除用户----》》进行字段更新来达到删除效果
+     * @param map
+     * @return
+     */
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result delete(@RequestParam Map<String,Object> map){
+        return userService.delete(map);
     }
 }
