@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class DateTimeUtils {
     public static void main(String[] args) {
@@ -17,6 +18,11 @@ public class DateTimeUtils {
 
         System.out.println(new DateTime());
         System.out.println(VeDate.getNowDateShort());
+
+        String token = UUID.randomUUID().toString();
+
+        System.out.println(token);
+
     }
 
 }

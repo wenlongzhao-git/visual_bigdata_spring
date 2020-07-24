@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Cookie Utils 类
@@ -13,10 +14,19 @@ import java.util.Map;
 public class CookieUtils {
 
     // TODO 后期做成动态获取，存储到数据库中，每次验证时到数据库中取并验证内容和时间
-    public static final String TOKEN_VALUE = "1234";
     public static final String ERROR_NOTLOGIN = "603";
     public static final String SUCCESS = "200";
     public static final String TOKEN = "token";
+
+
+    /**
+     * 利用UUID生成随机序列代表token值
+     * @return
+     */
+    public static String createCookieValue(){
+        String token = UUID.randomUUID().toString();
+        return token;
+    }
 
 
     /**

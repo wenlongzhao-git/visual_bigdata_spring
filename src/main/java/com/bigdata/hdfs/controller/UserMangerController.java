@@ -1,9 +1,13 @@
 package com.bigdata.hdfs.controller;
 
+import com.bigdata.hdfs.domain.CookieAdmin;
 import com.bigdata.hdfs.domain.Result;
 import com.bigdata.hdfs.domain.User;
+import com.bigdata.hdfs.service.CookieAdminService;
 import com.bigdata.hdfs.service.UserService;
 import com.bigdata.hdfs.utils.CookieUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +25,13 @@ import java.util.Map;
 @Controller
 public class UserMangerController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private CookieAdminService cookieAdminService;
 
     @GetMapping("/")
     public String index(Model model){
@@ -54,19 +62,47 @@ public class UserMangerController {
     public Result loginVerify(@RequestParam Map<String,Object> map, HttpServletRequest request, HttpServletResponse response,
                                            @CookieValue(value = "token", required = false) String token){
 
+        long start = System.currentTimeMillis();
+        logger.info("start login Verify");
         Result result = userService.findByUsernameAndPassword(map);
 
-        if (result.isSuccess()) {
-            if (token == null || CookieUtils.TOKEN_VALUE != CookieUtils.getCookie(request,CookieUtils.TOKEN)) {
-                CookieUtils.writeCookie(response, CookieUtils.TOKEN, CookieUtils.TOKEN_VALUE);
-                System.out.println("登陆成功，并添加新token, token = " + CookieUtils.TOKEN_VALUE);
-            } else {
-                //TODO 后期token值做随机值入库后，这里要先进行库里面的token查询，并重置到期时间
+        try {
+            if (result.isSuccess()) {
+                CookieAdmin cookieAdmin = cookieAdminService.findByUsername(map);
+
+                if (token == null || !cookieAdmin.getToken().equals(CookieUtils.getCookie(request,CookieUtils.TOKEN))) {
+                    if(cookieAdmin != null && ((String)map.get("username")).equals(cookieAdmin.getUsername())){
+
+                        CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
+                        CookieUtils.writeCookie(response, "username", (String) map.get("username"));
+                        System.out.println("登陆成功，并添加新Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                    }else {
+                        cookieAdmin = new CookieAdmin();
+                        token = CookieUtils.createCookieValue();
+                        cookieAdmin.setUsername((String) map.get("username"));
+                        cookieAdmin.setToken(token);
+                        Boolean save = cookieAdminService.save(cookieAdmin);
+                        if(save){
+                            CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
+                            CookieUtils.writeCookie(response, "username", (String) map.get("username"));
+                            System.out.println("登陆成功，并添加新Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                        } else {
+                            CookieUtils.writeCookie(response, CookieUtils.TOKEN, null);
+                            CookieUtils.writeCookie(response, "username", null);
+                            System.out.println("登陆失败，并添加新Cookie未成功, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                            result.setSuccess(false);
+                        }
+                    }
+                } else {
+                    CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
+                    CookieUtils.writeCookie(response, "username", (String) map.get("username"));
+                    System.out.println("登陆成功，并重置Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                }
             }
-            CookieUtils.writeCookie(response, "code", CookieUtils.SUCCESS);
-            CookieUtils.writeCookie(response, "username", ((User)result.getDetail()).getUsername());
-        } else {
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        logger.info("======used [" + (System.currentTimeMillis() - start) / 1000 + "] seconds ..");
         return result;
     }
 

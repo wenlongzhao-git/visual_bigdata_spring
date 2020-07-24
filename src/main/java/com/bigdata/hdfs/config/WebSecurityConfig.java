@@ -4,7 +4,10 @@ package com.bigdata.hdfs.config;
  * Created by huangds on 2017/10/24.
  */
 
+import com.bigdata.hdfs.domain.CookieAdmin;
+import com.bigdata.hdfs.service.CookieAdminService;
 import com.bigdata.hdfs.utils.CookieUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
@@ -12,11 +15,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 登录配置
+ * @author zwl
  */
 @Configuration
 public class WebSecurityConfig extends WebMvcConfigurerAdapter{
@@ -41,11 +46,21 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter{
     }
 
     private class SecurityInterceptor extends HandlerInterceptorAdapter{
+
+        @Autowired
+        private CookieAdminService cookieAdminService;
+
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws IOException {
-            HttpSession session = request.getSession();
 
-            if(CookieUtils.getCookie(request,CookieUtils.TOKEN) != null && CookieUtils.getCookie(request,CookieUtils.TOKEN).equals(CookieUtils.TOKEN_VALUE)){
+            String token = CookieUtils.getCookie(request,CookieUtils.TOKEN);
+            String username = CookieUtils.getCookie(request,"username");
+            Map<String,String> map = new HashMap<>(16);
+            map.put("username",username);
+
+            CookieAdmin cookieAdmin = cookieAdminService.findByUsername(map);
+
+            if(token != null && token.equals(cookieAdmin.getToken())){
                 CookieUtils.writeCookie(response, "code", CookieUtils.SUCCESS);
                 return true;
             }
