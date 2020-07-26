@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService{
 
         user.setUserps("普通");
         user.setIsdel(0);
+        user.setCreatetime(new Date(System.currentTimeMillis()));
 
         Result result = new Result();
         result.setSuccess(false);
@@ -68,11 +70,11 @@ public class UserServiceImpl implements UserService{
         result.setDetail(null);
 
         try {
-            List<User> user = userMapper.findAll();
-            if(user != null && user.size() > 0){
+            List<User> userList = userMapper.findAll();
+            if(userList != null && userList.size() > 0){
                 result.setMsg("用户存在！");
                 result.setSuccess(true);
-                result.setDetail(user);
+                result.setDetail(userList);
             }else {
                 result.setMsg("用户不存在！");
             }
@@ -160,9 +162,7 @@ public class UserServiceImpl implements UserService{
         userOld.setEmail(user.getEmail());
         userOld.setAge(user.getAge());
         userOld.setSex(user.getSex());
-
-        //TODO 后期进行时间的处理
-//        userOld.setUpdatetime(new Date());
+        userOld.setUpdatetime(new Date(System.currentTimeMillis()));
         try {
             int res = userMapper.update(userOld);
             if(res > 0){

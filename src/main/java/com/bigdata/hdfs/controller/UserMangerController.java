@@ -59,8 +59,9 @@ public class UserMangerController {
 
     @PostMapping("/loginVerify")
     @ResponseBody
-    public Result loginVerify(@RequestParam Map<String,Object> map, HttpServletRequest request, HttpServletResponse response,
-                                           @CookieValue(value = "token", required = false) String token){
+    public Result loginVerify(@RequestParam Map<String,Object> map, HttpServletResponse response,
+                              @CookieValue(value = "token", required = false) String token,
+                              @CookieValue(value = "username", required = false) String username){
 
         long start = System.currentTimeMillis();
         logger.info("start login Verify");
@@ -70,33 +71,27 @@ public class UserMangerController {
             if (result.isSuccess()) {
                 CookieAdmin cookieAdmin = cookieAdminService.findByUsername(map);
 
-                if (token == null || !cookieAdmin.getToken().equals(CookieUtils.getCookie(request,CookieUtils.TOKEN))) {
-                    if(cookieAdmin != null && ((String)map.get("username")).equals(cookieAdmin.getUsername())){
-
+                if (token != null && username != null && cookieAdmin != null && username.equals(cookieAdmin.getUsername()) && token.equals(cookieAdmin.getToken())) {
+                    CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
+                    CookieUtils.writeCookie(response, "username", username);
+                    logger.info("登陆成功，并取出Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                } else {
+                    cookieAdminService.delete(map);
+                    cookieAdmin = new CookieAdmin();
+                    token = CookieUtils.createCookieValue();
+                    cookieAdmin.setUsername((String) map.get("username"));
+                    cookieAdmin.setToken(token);
+                    Boolean save = cookieAdminService.save(cookieAdmin);
+                    if(save){
                         CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
                         CookieUtils.writeCookie(response, "username", (String) map.get("username"));
-                        System.out.println("登陆成功，并添加新Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
-                    }else {
-                        cookieAdmin = new CookieAdmin();
-                        token = CookieUtils.createCookieValue();
-                        cookieAdmin.setUsername((String) map.get("username"));
-                        cookieAdmin.setToken(token);
-                        Boolean save = cookieAdminService.save(cookieAdmin);
-                        if(save){
-                            CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
-                            CookieUtils.writeCookie(response, "username", (String) map.get("username"));
-                            System.out.println("登陆成功，并添加新Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
-                        } else {
-                            CookieUtils.writeCookie(response, CookieUtils.TOKEN, null);
-                            CookieUtils.writeCookie(response, "username", null);
-                            System.out.println("登陆失败，并添加新Cookie未成功, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
-                            result.setSuccess(false);
-                        }
+                        logger.info("登陆成功，并生成添加新Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                    } else {
+                        CookieUtils.writeCookie(response, CookieUtils.TOKEN, null);
+                        CookieUtils.writeCookie(response, "username", null);
+                        logger.info("登陆失败，并添加新Cookie未成功, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
+                        result.setSuccess(false);
                     }
-                } else {
-                    CookieUtils.writeCookie(response, CookieUtils.TOKEN, cookieAdmin.getToken());
-                    CookieUtils.writeCookie(response, "username", (String) map.get("username"));
-                    System.out.println("登陆成功，并重置Cookie, token = " + cookieAdmin.getToken()+",username = " + (String) map.get("username"));
                 }
             }
         }catch (Exception e){
@@ -152,7 +147,15 @@ public class UserMangerController {
      */
     @PostMapping("/logout")
     @ResponseBody
-    public Result logout(HttpServletResponse response){
+    public Result logout(HttpServletResponse response,@CookieValue(value = "username", required = false) String username){
+
+        Map<String,String > map = new HashMap<>();
+        map.put("username",username);
+
+        if(username != null){
+            cookieAdminService.delete(map);
+        }
+
         CookieUtils.writeCookie(response, "token", null,0);
         CookieUtils.writeCookie(response, "username", null,0);
 

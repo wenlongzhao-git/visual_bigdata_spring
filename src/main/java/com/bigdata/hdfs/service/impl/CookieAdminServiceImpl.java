@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class CookieAdminServiceImpl implements CookieAdminService {
      */
     @Override
     public Boolean save(CookieAdmin cookieAdmin) {
+        cookieAdmin.setCreatetime(new Date(System.currentTimeMillis()));
 
         try {
             int res = cookieAdminMapper.save(cookieAdmin);
@@ -71,14 +73,14 @@ public class CookieAdminServiceImpl implements CookieAdminService {
         Map<String,String> map = new HashMap<>();
         map.put("username",cookieAdmin.getUsername());
 
-        CookieAdmin cookieAdmin1Old = cookieAdminMapper.findByUsername(map);
+        CookieAdmin cookieAdminOld = cookieAdminMapper.findByUsername(map);
 
-        cookieAdmin1Old.setToken(cookieAdmin.getToken());
+        cookieAdminOld.setToken(cookieAdmin.getToken());
 
         //TODO 后期进行时间的处理
-//        userOld.setUpdatetime(new Date());
+        cookieAdminOld.setUpdatetime(new Date());
         try {
-            int res = cookieAdminMapper.update(cookieAdmin1Old);
+            int res = cookieAdminMapper.update(cookieAdminOld);
             if(res > 0){
                 return true;
             }
