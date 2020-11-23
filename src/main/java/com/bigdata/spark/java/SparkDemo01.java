@@ -1,20 +1,27 @@
-package com.bigdata.spark;
+package com.bigdata.spark.java;
 
+import com.sun.tools.javac.util.ListBuffer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 
+import java.util.ArrayList;
+
 public class SparkDemo01 {
     public static void main(String[] args) {
+
+        ListBuffer<String> jars = new ListBuffer<>();
+       // args(0).split(',').map(jars += _);
+
         SparkConf conf = new SparkConf()
                 .setAppName("SparkDemo01");
                 //.setMaster("local");
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<String> lines = sc.textFile("C:\\Users\\Administrator\\Desktop\\栅格人口属性统计.sql");
+        JavaRDD<String> lines = sc.textFile("/test.txt");
 
         JavaRDD<Integer> lineLength = lines.map(new Function<String, Integer>() {
             @Override
