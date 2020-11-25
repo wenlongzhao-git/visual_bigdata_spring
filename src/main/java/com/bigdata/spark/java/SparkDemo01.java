@@ -7,8 +7,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 
-import java.util.ArrayList;
-
 public class SparkDemo01 {
     public static void main(String[] args) {
 
