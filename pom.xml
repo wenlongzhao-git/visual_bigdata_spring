@@ -286,7 +286,6 @@
             </plugin>
 
 
-
             <!--    用于指定本项目生成的jar包中的MANIFEST.MF文件中的配置，如Class-Path和Main-Class，    -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
