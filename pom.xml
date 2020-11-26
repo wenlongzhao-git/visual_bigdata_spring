@@ -406,19 +406,18 @@
                     </execution>
                 </executions>
             </plugin>-->
-
-            <!--<plugin>
+        <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework</groupId>
                     <artifactId>springloaded</artifactId>
-                    <version>1.2.8.RELEASE</version>
+                    <version>1.2.6.RELEASE</version>
                 </dependency>
             </dependencies>
-        </plugin>-->
-            <!--<plugin>
+        </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -436,7 +435,7 @@
                     <classpathScope>compile</classpathScope>
                     <mainClass>com.bigdata.spark.java.SparkDemo01</mainClass>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 
